@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = `${process.env.REACT_APP_API_URL}/api/products`;
+const API_BASE = `${import.meta.env.VITE_API_URL}/api/products`;
+console.log("🌐 API_BASE is:", API_BASE);
 
 function App() {
   // ---------- STATE ----------
