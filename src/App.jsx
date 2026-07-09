@@ -22,6 +22,7 @@ function App() {
   // ---------- FETCH PRODUCTS (GET) ----------
   const fetchProducts = async () => {
     setLoading(true);
+    console.log("📡 Fetching from:", API_BASE);
     try {
       const res = await fetch(API_BASE);
       if (!res.ok) throw new Error('Backend connection failed');
@@ -140,12 +141,12 @@ function App() {
         {/* ===== ADD / UPDATE PRODUCT FORM ===== */}
         <div className="bg-gray-50 p-5 rounded-lg border border-gray-200 mb-8">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">
-             {editingId !== null ? (
-                <span>✏️ Update Product</span> 
-              ) : (
-                <span>➕ Add Product</span>)
-             }
-        </h2>
+            {editingId !== null ? (
+              <span>✏️ Update Product</span>
+            ) : (
+              <span>➕ Add Product</span>
+            )}
+          </h2>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
@@ -222,7 +223,7 @@ function App() {
         {/* ===== ERROR DISPLAY ===== */}
         {error && (
           <div className="mb-4 p-3 bg-red-100 text-red-700 border border-red-400 rounded-md">
-            ⚠️ {error} — Make sure the FastAPI backend is running on port 8000.
+            ⚠️ {error}
           </div>
         )}
 
