@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = 'http://127.0.0.1:8000/api/products';
+const API_BASE = `${process.env.REACT_APP_API_URL}/api/products`;
 
 function App() {
   // ---------- STATE ----------
