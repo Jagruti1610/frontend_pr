@@ -139,8 +139,10 @@ function App() {
         {/* ===== ADD / UPDATE PRODUCT FORM ===== */}
         <div className="bg-gray-50 p-5 rounded-lg border border-gray-200 mb-8">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">
-            {editingId !== null ? '✏️ Update Product' : '➕ Add Product'}
-          </h2>
+             {editingId !== null ? (
+                <span>✏️ Update Product</span> ) : (<span>➕ Add Product</span>)
+             }
+        </h2>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
