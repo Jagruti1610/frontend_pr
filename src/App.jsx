@@ -9,6 +9,11 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
+  // ---------- GROQ AI STATE ----------
+  const [chatMessage, setChatMessage] = useState('');
+  const [aiResponse, setAiResponse] = useState('');
+  const [loadingAI, setLoadingAI] = useState(false);
+  
   // Form fields
   const [form, setForm] = useState({
     name: '',
@@ -123,6 +128,41 @@ function App() {
     }
   };
 
+  // ---------- HANDLE AI REQUEST ----------
+  const handleAskAI = async () => {
+    if (!chatMessage.trim()) {
+      alert('Please type a message!');
+      return;
+    }
+
+    setLoadingAI(true);
+    setAiResponse('');
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: chatMessage }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'AI request failed');
+      }
+
+      const data = await response.json();
+      setAiResponse(data.response);
+      setChatMessage(''); // Clear input after sending
+    } catch (error) {
+      console.error('Error calling AI:', error);
+      setAiResponse(`⚠️ Error: ${error.message}`);
+    } finally {
+      setLoadingAI(false);
+    }
+  };
+
   // ---------- RENDER ----------
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
@@ -226,6 +266,39 @@ function App() {
             ⚠️ {error}
           </div>
         )}
+
+        {/* ===== AI CHAT SECTION ===== */}
+        <div className="bg-gradient-to-r from-purple-50 to-indigo-50 p-5 rounded-lg border border-purple-200 mb-8">
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">
+            🤖 Aviraa AI Assistant
+          </h2>
+          <div className="flex flex-col md:flex-row gap-3">
+            <input
+              type="text"
+              value={chatMessage}
+              onChange={(e) => setChatMessage(e.target.value)}
+              placeholder="Ask me about inventory, sales, or anything..."
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:outline-none"
+              onKeyDown={(e) => e.key === 'Enter' && handleAskAI()}
+            />
+            <button
+              onClick={handleAskAI}
+              disabled={loadingAI}
+              className="px-6 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-300 text-white font-semibold rounded-md transition"
+            >
+              {loadingAI ? 'Thinking...' : 'Ask AI'}
+            </button>
+          </div>
+          
+          {aiResponse && (
+            <div className="mt-4 p-4 bg-white rounded-md border border-gray-200 shadow-sm">
+              <div className="flex items-start gap-2">
+                <span className="text-purple-600 font-bold text-lg">🤖</span>
+                <p className="text-gray-800 whitespace-pre-wrap">{aiResponse}</p>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* ===== PRODUCTS TABLE ===== */}
         <div>
